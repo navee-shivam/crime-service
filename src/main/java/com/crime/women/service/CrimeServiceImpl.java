@@ -16,6 +16,10 @@ import com.crime.women.model.CrimeData;
 import com.crime.women.repository.CrimeRepository;
 import com.crime.women.utils.Constants;
 
+/**
+ * CrimeServiceImpl is an implementation class of crimeService where in related
+ * operations takes place
+ */
 @Service
 public class CrimeServiceImpl implements CrimeService {
 
@@ -25,11 +29,13 @@ public class CrimeServiceImpl implements CrimeService {
 		this.crimeRepository = crimeRepository;
 	}
 
-	@Override
-	public String getWelcome() {
-		return "welcome";
-	}
-
+	/**
+	 * getDetails method returns all data based on pagination
+	 * 
+	 * @param page
+	 * @param size
+	 * @return Page<CrimeData>
+	 */
 	@Override
 	public ResponseDto<Page<CrimeData>> getDetails(int page, int size) {
 		Pageable pageable = PageRequest.of(page, size);
@@ -38,19 +44,27 @@ public class CrimeServiceImpl implements CrimeService {
 		return response;
 	}
 
+	/**
+	 * getCrimeDetailsCount used to fetch the data in both scenario, user can enter
+	 * state and get response orElse they can see the overall count of crime in all
+	 * states.
+	 * 
+	 * @param request
+	 * @return List<CrimeDetailsByState>
+	 */
 	@Override
 	public ResponseDto<List<CrimeDetailsByState>> getCrimeDetailsCount(RequestDto request) {
-		ResponseDto<List<CrimeDetailsByState>> response;
 		if (request != null && request.getState() != null) {
-			Optional<List<CrimeDetailsByState>> optionalDetailList = Optional
-					.ofNullable(crimeRepository.findCrimeCountByStateAndType(request.getState()))
-					.filter(list -> list.isEmpty())
-					.orElseThrow(() -> new NotFoundException("Data not found"));
-			response = new ResponseDto<>(Constants.SUCCESS, optionalDetailList.get());
+			Optional<List<CrimeDetailsByState>> optionalDetailList = crimeRepository
+					.findCrimeCountByStateAndType(request.getState());
+
+			List<CrimeDetailsByState> detailList = optionalDetailList.filter(list -> !list.isEmpty())
+					.orElseThrow(() -> new NotFoundException());
+
+			return new ResponseDto<>(Constants.SUCCESS, detailList);
 		} else {
-			response = new ResponseDto<>(Constants.SUCCESS, crimeRepository.getCountByState());
+			return new ResponseDto<>(Constants.SUCCESS, crimeRepository.getCountByState());
 		}
-		return response;
 	}
 
 }

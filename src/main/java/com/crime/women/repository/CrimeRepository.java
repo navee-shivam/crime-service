@@ -13,13 +13,22 @@ import org.springframework.stereotype.Repository;
 import com.crime.women.dto.CrimeDetailsByState;
 import com.crime.women.model.CrimeData;
 
+/**
+ * CrimeRepository it extends paging and sorting repository where in it had the
+ * functionality related to database operations
+ */
 @Repository
 public interface CrimeRepository extends PagingAndSortingRepository<CrimeData, Integer> {
 
 	Page<CrimeData> findAllByOrderByIdAsc(Pageable pageable);
 
-	List<CrimeData> findByState(String state);
-
+	/**
+	 * findByCrimeType used to fetch the data based on crimeType (currently no
+	 * implementation made, future scope)
+	 * 
+	 * @param crimeType
+	 * @return
+	 */
 	List<CrimeData> findByCrimeType(String crimeType);
 
 	@Query("SELECT new com.crime.women.dto.CrimeDetailsByState(UPPER(c.state) as ignorecase_state, SUM(c.count)) FROM CrimeData c "
@@ -27,7 +36,7 @@ public interface CrimeRepository extends PagingAndSortingRepository<CrimeData, I
 	List<CrimeDetailsByState> getCountByState();
 
 	@Query("SELECT new com.crime.women.dto.CrimeDetailsByState(c.crimeType, SUM(c.count)) FROM CrimeData c "
-			+ "WHERE UPPER(c.state) LIKE UPPER(:state) GROUP BY c.state, c.crimeType ORDER BY c.state")
+			+ "WHERE UPPER(c.state) LIKE UPPER(:state) GROUP BY c.crimeType ")
 	Optional<List<CrimeDetailsByState>> findCrimeCountByStateAndType(@Param("state") String state);
 
 }

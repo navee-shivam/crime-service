@@ -13,4 +13,8 @@
     <changeSet id="2" author="naveen">
         <sqlFile path="scripts/insert-data.sql" splitStatements="true" endDelimiter=";" />
     </changeSet>
+    
+    <changeSet id="3" author="naveen">
+        <sqlFile path="scripts/update-data.sql" splitStatements="true" endDelimiter=";" />
+    </changeSet>
 </databaseChangeLog>

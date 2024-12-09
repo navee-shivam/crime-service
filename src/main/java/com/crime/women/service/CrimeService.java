@@ -9,8 +9,11 @@ import com.crime.women.dto.RequestDto;
 import com.crime.women.dto.ResponseDto;
 import com.crime.women.model.CrimeData;
 
+/**
+ * CrimeService interface supports and holds the related crime operation in
+ * single interface
+ */
 public interface CrimeService {
-	public String getWelcome();
 
 	public ResponseDto<Page<CrimeData>> getDetails(int page, int size);
 

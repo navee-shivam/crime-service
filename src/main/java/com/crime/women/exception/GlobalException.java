@@ -9,6 +9,10 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import com.crime.women.dto.ResponseDto;
 
+/**
+ * Handles the exception globally and it handles the custom Exception
+ * NotFoundException
+ */
 @ControllerAdvice
 public class GlobalException {
 
